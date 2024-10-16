@@ -35,7 +35,7 @@ public class List<E> implements Iterable<E> {
         if(this.size == this.objects.length){
             this.grow();
         }
-        this.objects[this.size++] = e;
+        this.objects[this.size] = e;
         this.size++;
     }
 
@@ -82,15 +82,21 @@ public class List<E> implements Iterable<E> {
         return this.find(e);
     } //return the index of the object or return -1
 
+
     private class ListIterator<E> implements Iterator<E> {
         private int curr = 0;
 
+        @Override
         public boolean hasNext() {
+            if(isEmpty()){
+                return false;
+            }
             return this.curr < size;
         }//return false if it’s empty or end of list
 
+        @Override
         public E next() {
-            if(!hasNext()){
+            if(isEmpty() || !hasNext()){
                 return null;
             }
             return (E) objects[this.curr++];

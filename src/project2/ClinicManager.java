@@ -22,6 +22,8 @@ public class ClinicManager {
         System.out.println("ClinicManager is running.");
         File fp = new File("providers.txt");
         processProviders(fp); //need to find out how to find out ratePerVisit for technicians
+        System.out.println("Providers loaded to the list.");
+        printProviders();
         while (true) {
             String input = scanner.nextLine().trim();
 
@@ -92,6 +94,13 @@ public class ClinicManager {
             default:
                 System.out.println("Not valid command.");
                 break;
+        }
+    }
+
+    private void printProviders(){
+        Sort.provider(providers);
+        for(Provider prov : providers){
+            System.out.println(prov.toString()); //Need to reformat
         }
     }
 
