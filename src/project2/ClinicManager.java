@@ -12,6 +12,7 @@ public class ClinicManager {
     List<Provider> providers = new List<>();
     Circular<Provider> technicians = new Circular<>();
     List<Timeslot> timeslots = Timeslot.generateTimeslots();
+    List<Patient> record = new List<>();
     DecimalFormat df = new DecimalFormat("#,###.00");
 
     public ClinicManager(){
@@ -370,20 +371,21 @@ public class ClinicManager {
 
     // Prints all Patients' billing statements
     private void printStatements(){
-        if(record.getPatients()[0] == null){
+        if(record.isEmpty()){
             System.out.println("No patients found in record.");
             return;
         }
 
-        record.sortRecord(0, record.getSize()-1);
+        Sort.patient(record);
 
         System.out.println("** Billing statement ordered by patient **");
-        for(int i = 0; i < record.getSize(); i++){
-            int charge = record.getPatients()[i].charge();
-            String fname = record.getPatients()[i].getProfile().getFname();
-            String lname = record.getPatients()[i].getProfile().getLname();
-            String dobString = record.getPatients()[i].getProfile().getDob().toString();
-            System.out.println("(" + (i+1) + ") " + fname + " " + lname + " " + dobString + " [amount due: $" + df.format(charge) + "]");
+        int count = 0;
+        for(Patient p : record){
+            int charge = p.charge();
+            String fname = p.getProfile().getFname();
+            String lname = p.getProfile().getLname();
+            String dobString = p.getProfile().getDob().toString();
+            System.out.println("(" + (count+1) + ") " + fname + " " + lname + " " + dobString + " [amount due: $" + df.format(charge) + "]");
         }
         System.out.println("** end of list **\n");
     }
@@ -391,21 +393,21 @@ public class ClinicManager {
     // Helper method to make adding to the record easier
     private void addToMedicalRecord(Profile patient, Appointment appointment){
         Patient patientObj = new Patient(patient);
-        int patientIndex = record.patientIdx(patientObj);
+        int patientIndex = record.indexOf(patientObj);
         if(patientIndex != -1){
-            record.getPatients()[patientIndex].add(appointment);
+            record.get(patientIndex).add(appointment);
         } else {
             record.add(patientObj);
-            int newPatientIndex = record.patientIdx(patientObj);
-            record.getPatients()[newPatientIndex].add(appointment);
+            int newPatientIndex = record.indexOf(patientObj);
+            record.get(newPatientIndex).add(appointment);
         }
     }
 
     // Helper method to make removing a Visit from a Patient easier (when cancelling an appointment)
     private void removePatientVisit(Profile patient, Appointment appointment){
         Patient patientObj = new Patient(patient);
-        int patientIndex = record.patientIdx(patientObj);
-        record.getPatients()[patientIndex].remove(appointment);
+        int patientIndex = record.indexOf(patientObj);
+        record.get(patientIndex).remove(appointment);
     }
 
     private void printAppointments(List<Appointment> appointments){
@@ -415,13 +417,13 @@ public class ClinicManager {
             String fname = appointments.get(i).getProfile().getFname();
             String lname = appointments.get(i).getProfile().getLname();
             String dob = appointments.get(i).getProfile().getDob().toString();
-            String pfname = appointments.get(i).getProvider().getProfile().getFname().toUpperCase();
-            String plname = appointments.get(i).getProvider().getProfile().getLname().toUpperCase();
-            String pdob = appointments.get(i).getProvider().getProfile().getDob().toString();
-            String loc = appointments.get(i).getProvider().getLocation().toString();
-            String county = appointments.get(i).getProvider().getLocation().getCounty();
-            String zip = appointments.get(i).getProvider().getLocation().getZip();
-            String specialty = appointments.get(i).getProvider()
+            if(appointments.get(i).getProvider().getClass()==Doctor.class){
+                System.out.println(date + " " + time + " " + fname + " " + lname + " " + dob +
+                        " " + ((Doctor)(appointments.get(i).getProvider())).toString());
+            } else {
+                System.out.println(date + " " + time + " " + fname + " " + lname + " " + dob +
+                        " " + ((Technician)(appointments.get(i).getProvider())).toString());
+            }
         }
     }
 

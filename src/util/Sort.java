@@ -143,12 +143,43 @@ public class Sort {
         }
     }
 
+    private static int partitionPatients(int sIdx, int eIdx, List<Patient> patients){
+        Patient piv = patients.get(eIdx);
+        int i = (sIdx-1);
+
+        for (int j = sIdx; j<eIdx; j++){
+            if(patients.get(j).getProfile().compareTo(piv.getProfile())<=0){
+                i++;
+                Patient temp = patients.get(i);
+                patients.set(i, patients.get(j));
+                patients.set(j, temp);
+            }
+        }
+        Patient temp = patients.get(i+1);
+        patients.set(i+1, patients.get(eIdx));
+        patients.set(eIdx, temp);
+
+        return i+1;
+    }
+
+    private static void sortByPatients(int sIdx, int eIdx, List<Patient> patients){
+        if(sIdx < eIdx){
+            int pIdx = partitionPatients(sIdx, eIdx, patients);
+            sortByPatients(sIdx, pIdx-1, patients);
+            sortByPatients(pIdx+1, eIdx, patients);
+        }
+    }
+
     private static void sortByL(int sIdx, int eIdx, List<Appointment> appointments){
         if(sIdx < eIdx){
             int pIdx = partitionByL(sIdx, eIdx, appointments);
             sortByL(sIdx, pIdx-1, appointments);
             sortByL(pIdx+1, eIdx, appointments);
         }
+    }
+
+    public static void patient(List<Patient> patients){
+        sortByPatients(0, patients.size()-1, patients);
     }
 
     public static void appointment(List<Appointment> appointments, char key){
