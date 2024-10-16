@@ -191,11 +191,12 @@ public class ClinicManager {
             System.out.println(timeslotString + " is not a valid timeslot.");
             return;
         }
-        if(Integer.parseInt(timeslotString) < 1 || Integer.parseInt(timeslotString) > Timeslot.values().length){
+        if(Integer.parseInt(timeslotString) < 1 || Integer.parseInt(timeslotString) > 12){
             System.out.println(timeslotString + " is not a valid timeslot.");
             return;
         }
-        Timeslot timeslot = Timeslot.valueOf("SLOT" + Integer.parseInt(timeslotString));
+
+        Timeslot timeslot = timeslots.get(Integer.parseInt(timeslotString)-1);
 
         String fname = separated_data[2];
         String lname = separated_data[3];
@@ -206,13 +207,20 @@ public class ClinicManager {
         Date dobDate = new Date(dobMonth, dobDay, dobYear);
         Profile patient = new Profile(fname, lname, dobDate);
 
-        String providerString = separated_data[5];
-        if(!checkProviderExists(providerString.toUpperCase())){
-            System.out.println(providerString.substring(0,1).toUpperCase() + providerString.substring(1).toLowerCase() +
+
+        String npi = separated_data[5];
+        if(!checkProviderExists(npi)){
+            System.out.println(npi +
                     " - provider doesn't exist.");
             return;
         }
-        Provider provider = Provider.valueOf(providerString.toUpperCase());
+
+        Provider provider = null;
+        for(Provider prov : providers){
+            if(prov.getClass()==Doctor.class && ((Doctor) prov).getNpi().equals(npi)){
+                provider = prov;
+            }
+        }
 
         Appointment appointment = new Appointment(appointmentDate, timeslot, patient, provider);
 
@@ -221,21 +229,23 @@ public class ClinicManager {
             return;
         }
 
+        Doctor doc = (Doctor) provider;
+
         if(providerBooked(timeslot, appointment)){
-            System.out.println("[" + providerString.toUpperCase() + ", " +
-                    provider.getLocation().toString().toUpperCase() + ", " + provider.getLocation().countyString() + " " +
-                    provider.getLocation().getZip() + ", " + provider.getSpecialty().toString().toUpperCase() + "] is not available at slot " +
-                    timeslotString + ".");
+            System.out.println("[" + doc.getProfile().getFname().toUpperCase() + " " + doc.getProfile().getLname().toUpperCase() +
+                    " " + doc.getProfile().getDob().toString() + ", " +
+                    doc.getLocation().toString() + ", " + doc.getLocation().countyString() + " " + doc.getLocation().getZip() + "][" +
+                    doc.getSpecialty().toString() + ", #" + doc.getNpi() + "] is not available at slot " + timeslotString + ".");
             return;
         }
 
         appointments.add(appointment);
         addToMedicalRecord(patient, appointment);
-        System.out.println(appointment.getDate().toString() + " " + appointment.getTimeslot().toString() + " " +
-                fname + " " + lname + " " + dobDate.toString() + " [" + providerString.toUpperCase() + ", " +
-                provider.getLocation().toString().toUpperCase() + ", " + provider.getLocation().countyString() + " " +
-                provider.getLocation().getZip() + ", " + provider.getSpecialty().toString().toUpperCase() + "] " +
-                "booked.");
+        System.out.println(appointment.getDate().toString() + " " + timeslot.toString() + " " + patient.getFname() + " " + patient.getLname() + patient.getDob().toString() + " " +
+                "[" + doc.getProfile().getFname().toUpperCase() + " " + doc.getProfile().getLname().toUpperCase() +
+                " " + doc.getProfile().getDob().toString() + ", " +
+                doc.getLocation().toString() + ", " + doc.getLocation().countyString() + " " + doc.getLocation().getZip() + "][" +
+                doc.getSpecialty().toString() + ", #" + doc.getNpi() + "] booked.");
     }
 
     // Takes array of Strings containing data after command, removes an appointment on list if it exists
@@ -336,9 +346,9 @@ public class ClinicManager {
     }
 
     // Helper method that checks if a given provider name exists as an enum value in Provider
-    private boolean checkProviderExists(String providerString) {
-        for (Provider p : Provider.values()) {
-            if (p.name().equals(providerString)) {
+    private boolean checkProviderExists(String npi) {
+        for (Provider p : providers) {
+            if (p.getClass()==Doctor.class && ((Doctor) p).getNpi().equals(npi)) {
                 return true;
             }
         }

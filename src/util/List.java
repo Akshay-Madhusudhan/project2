@@ -34,7 +34,7 @@ public class List<E> implements Iterable<E> {
     }
 
     public void add(E e) {
-        if(this.size == this.objects.length){
+        if(this.size == this.objects.length || this.isEmpty()){
             this.grow();
         }
         this.objects[this.size] = e;

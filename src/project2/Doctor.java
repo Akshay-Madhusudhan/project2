@@ -16,6 +16,14 @@ public class Doctor extends Provider{
         return 0;
     }
 
+    public String getNpi(){
+        return this.npi;
+    }
+
+    public Specialty getSpecialty(){
+        return this.specialty;
+    }
+
     @Override
     public String toString(){
         String fName = this.getProfile().getFname().toUpperCase();
