@@ -1,12 +1,16 @@
 package project2;
+import util.*;
 
-public class Provider extends Person{
+
+public abstract class Provider extends Person{
     private Location location;
 
     public Provider(Profile profile, Location location){
         super(profile);
         this.location = location;
     }
+
+    public abstract int rate();
 
     @Override
     public boolean equals(Object obj){

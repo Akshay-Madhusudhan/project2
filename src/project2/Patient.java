@@ -1,4 +1,5 @@
 package project2;
+import util.*;
 
 public class Patient extends Person{
     private Visit visit;

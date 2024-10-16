@@ -1,7 +1,6 @@
 package util;
 
-import project2.Appointment;
-import project2.Provider;
+import project2.*;
 
 public class Sort {
 

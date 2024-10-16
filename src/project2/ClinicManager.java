@@ -1,8 +1,8 @@
 package project2;
-import util.Date;
-import util.List;
-import util.Sort;
+import util.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
@@ -10,6 +10,7 @@ public class ClinicManager {
     private Scanner scanner;
     List<Appointment> appointments = new List<>();
     List<Provider> providers = new List<>();
+    List<Provider> technicians = new List<>();
     List<Timeslot> timeslots = Timeslot.generateTimeslots();
     DecimalFormat df = new DecimalFormat("#,###.00");
 
@@ -18,26 +19,80 @@ public class ClinicManager {
     }
 
     public void run() {
-        System.out.println("Scheduler is running.");
+        System.out.println("ClinicManager is running.");
+        File fp = new File("providers.txt");
+        processProviders(fp); //need to find out how to find out ratePerVisit for technicians
         while (true) {
             String input = scanner.nextLine().trim();
 
-            if (input.isEmpty()) System.out.println("");
+            if (input.isEmpty()) System.out.print("");
 
             else if (input.charAt(0) == 'Q') {
-                System.out.println("Scheduler is terminated.");
+                System.out.println("ClinicManager is terminated.");
                 break;
             }
             else {
-                processProviders(input);
                 processCommand(input);
             }
         }
         scanner.close();
     }
 
-    private void processProviders(String input){
+    private void processProviders(File fp){
+        try{
+            Scanner scanner = new Scanner(fp);
+            while(scanner.hasNextLine()){
+                String input = scanner.nextLine().trim();
+                providersHelper(input);
+            }
+        } catch(FileNotFoundException e){
+            System.out.println("providers.txt file not found.");
+        }
+    }
 
+    private void providersHelper(String input){
+        String[] separated_data = input.split("\\s+");
+        String command = separated_data[0];
+        String[] dateStrings;
+        int month, day, year;
+        Date dob;
+        Profile newProfile;
+        Location loc;
+        Specialty specialty;
+        String npi;
+        Provider prov;
+        switch(command){
+            case "D":
+                dateStrings = separated_data[3].split("/");
+                month = Integer.parseInt(dateStrings[0]);
+                day = Integer.parseInt(dateStrings[1]);
+                year = Integer.parseInt(dateStrings[2]);
+                dob = new Date(month, day, year);
+                newProfile = new Profile(separated_data[1], separated_data[2], dob);
+                loc = Location.valueOf(separated_data[4]);
+                specialty = Specialty.valueOf(separated_data[5]);
+                npi = separated_data[6];
+                prov = new Doctor(newProfile, loc, specialty, npi);
+                providers.add(prov);
+                break;
+            case "T":
+                dateStrings = separated_data[3].split("/");
+                month = Integer.parseInt(dateStrings[0]);
+                day = Integer.parseInt(dateStrings[1]);
+                year = Integer.parseInt(dateStrings[2]);
+                dob = new Date(month, day, year);
+                newProfile = new Profile(separated_data[1], separated_data[2], dob);
+                loc = Location.valueOf(separated_data[4]);
+                npi = separated_data[5];
+                int ratePerVisit = 0; //Change idk how we're supposed to know the rates for technicians
+                prov = new Technician(newProfile, loc, ratePerVisit);
+                technicians.add(prov);
+                providers.add(prov);
+                break;
+            default:
+                System.out.println("Not valid command.");
+                break;
+        }
     }
 
     // Direct commands to respective functions
@@ -48,15 +103,22 @@ public class ClinicManager {
 
         switch (command) {
             case "D":
+                //Schedule new office appointment (Doctor)
                 scheduleAppointment(separated_data);
                 break;
+            case "T":
+                //Schedule new imaging appointment (Technician)
+                break;
             case "C":
+                //Cancel any type of appointment (Should work the same as Project 1)
                 cancelAppointment(separated_data);
                 break;
             case "R":
+                //Should work same as project 1
                 rescheduleAppointment(separated_data);
                 break;
             case "PA":
+                //Implement printAppointments
                 Sort.appointment(appointments, 'A');
                 printAppointments(appointments);
                 break;
@@ -68,10 +130,18 @@ public class ClinicManager {
                 Sort.appointment(appointments, 'L');
                 printAppointments(appointments);
                 break;
-                case "PC "
+            case "PC":
+                //Need to implement
+                break;
+            case "PO":
+                //Need to implement
+                break;
+            case "PI":
+                //Need to implement
+                break;
             case "PS":
                 printStatements();
-                appointments = new List();
+                appointments = new List<>();
                 break;
             default:
                 System.out.println("Invalid command!");
@@ -310,6 +380,23 @@ public class ClinicManager {
         Patient patientObj = new Patient(patient);
         int patientIndex = record.patientIdx(patientObj);
         record.getPatients()[patientIndex].remove(appointment);
+    }
+
+    private void printAppointments(List<Appointment> appointments){
+        for(int i = 0; i< appointments.size(); i++){
+            String date = appointments.get(i).getDate().toString();
+            String time = appointments.get(i).getTimeslot().toString();
+            String fname = appointments.get(i).getProfile().getFname();
+            String lname = appointments.get(i).getProfile().getLname();
+            String dob = appointments.get(i).getProfile().getDob().toString();
+            String pfname = appointments.get(i).getProvider().getProfile().getFname().toUpperCase();
+            String plname = appointments.get(i).getProvider().getProfile().getLname().toUpperCase();
+            String pdob = appointments.get(i).getProvider().getProfile().getDob().toString();
+            String loc = appointments.get(i).getProvider().getLocation().toString();
+            String county = appointments.get(i).getProvider().getLocation().getCounty();
+            String zip = appointments.get(i).getProvider().getLocation().getZip();
+            String specialty = appointments.get(i).getProvider()
+        }
     }
 
 }

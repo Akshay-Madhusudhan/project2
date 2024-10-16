@@ -1,6 +1,6 @@
 package project2;
 
-import util.Date;
+import util.*;
 
 /**
  * @author Akshay Madhusudhan

@@ -1,5 +1,5 @@
 package project2;
-import util.List;
+import util.*;
 
 public class Timeslot implements Comparable<Timeslot>{
     private int hour;

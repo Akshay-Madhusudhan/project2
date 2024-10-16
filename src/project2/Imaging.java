@@ -1,6 +1,6 @@
 package project2;
 
-import util.Date;
+import util.*;
 
 public class Imaging extends Appointment{
     private Radiology room;
