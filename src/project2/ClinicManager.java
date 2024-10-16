@@ -1,6 +1,7 @@
 package project2;
 import util.Date;
 import util.List;
+import util.Sort;
 
 import java.text.DecimalFormat;
 import java.util.Scanner;
@@ -8,6 +9,8 @@ import java.util.Scanner;
 public class ClinicManager {
     private Scanner scanner;
     List<Appointment> appointments = new List<>();
+    List<Provider> providers = new List<>();
+    List<Timeslot> timeslots = Timeslot.generateTimeslots();
     DecimalFormat df = new DecimalFormat("#,###.00");
 
     public ClinicManager(){
@@ -44,7 +47,7 @@ public class ClinicManager {
         String[] separated_data = data.split(",");
 
         switch (command) {
-            case "S":
+            case "D":
                 scheduleAppointment(separated_data);
                 break;
             case "C":
@@ -54,14 +57,18 @@ public class ClinicManager {
                 rescheduleAppointment(separated_data);
                 break;
             case "PA":
-                appointments.printByAppointment();
+                Sort.appointment(appointments, 'A');
+                printAppointments(appointments);
                 break;
             case "PP":
-                appointments.printByPatient();
+                Sort.appointment(appointments, 'P');
+                printAppointments(appointments);
                 break;
             case "PL":
-                appointments.printByLocation();
+                Sort.appointment(appointments, 'L');
+                printAppointments(appointments);
                 break;
+                case "PC "
             case "PS":
                 printStatements();
                 appointments = new List();
