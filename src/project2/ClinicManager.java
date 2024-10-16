@@ -10,7 +10,7 @@ public class ClinicManager {
     private Scanner scanner;
     List<Appointment> appointments = new List<>();
     List<Provider> providers = new List<>();
-    List<Provider> technicians = new List<>();
+    Circular<Provider> technicians = new Circular<>();
     List<Timeslot> timeslots = Timeslot.generateTimeslots();
     DecimalFormat df = new DecimalFormat("#,###.00");
 
@@ -19,11 +19,13 @@ public class ClinicManager {
     }
 
     public void run() {
-        System.out.println("ClinicManager is running.");
         File fp = new File("providers.txt");
         processProviders(fp); //need to find out how to find out ratePerVisit for technicians
         System.out.println("Providers loaded to the list.");
         printProviders();
+        System.out.println("\nRotation list for the technicians.");
+        printTechnicians();
+        System.out.println("\nClinic Manager is running...");
         while (true) {
             String input = scanner.nextLine().trim();
 
@@ -38,6 +40,12 @@ public class ClinicManager {
             }
         }
         scanner.close();
+    }
+
+    private void printTechnicians(){
+        for(Provider tech : technicians){
+            System.out.print(tech.getProfile().getFname().toUpperCase() + " " + tech.getProfile().getLname().toUpperCase() + " (" + tech.getLocation().toString() + ") -->");
+        }
     }
 
     private void processProviders(File fp){

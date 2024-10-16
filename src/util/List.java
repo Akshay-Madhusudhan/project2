@@ -1,4 +1,6 @@
 package util;
+
+
 import java.util.Iterator;
 
 public class List<E> implements Iterable<E> {
@@ -61,7 +63,7 @@ public class List<E> implements Iterable<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new ListIterator<>();
+        return new ListIterator();
     }
 
     public E get(int index) {
@@ -83,7 +85,7 @@ public class List<E> implements Iterable<E> {
     } //return the index of the object or return -1
 
 
-    private class ListIterator<E> implements Iterator<E> {
+    private class ListIterator implements Iterator<E> {
         private int curr = 0;
 
         @Override
@@ -99,7 +101,7 @@ public class List<E> implements Iterable<E> {
             if(isEmpty() || !hasNext()){
                 return null;
             }
-            return (E) objects[this.curr++];
+            return objects[this.curr++];
         } //return the next object in the list
     }
 }
