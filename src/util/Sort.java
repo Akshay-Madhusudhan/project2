@@ -121,12 +121,25 @@ public class Sort {
         int i = (sIdx-1);
 
         for (int j = sIdx; j<eIdx; j++){
-            if(providers.get(j).getProfile().compareTo(piv.getProfile())<0){
+            if(providers.get(j).getProfile().compareTo(piv.getProfile())<=0){
                 i++;
                 Provider temp = providers.get(i);
                 providers.set(i, providers.get(j));
                 providers.set(j, temp);
             }
+        }
+        Provider temp = providers.get(i+1);
+        providers.set(i+1, providers.get(eIdx));
+        providers.set(eIdx, temp);
+
+        return i+1;
+    }
+
+    private static void sortByProviders(int sIdx, int eIdx, List<Provider> providers){
+        if(sIdx < eIdx){
+            int pIdx = partitionProviders(sIdx, eIdx, providers);
+            sortByProviders(sIdx, pIdx-1, providers);
+            sortByProviders(pIdx+1, eIdx, providers);
         }
     }
 
@@ -150,8 +163,12 @@ public class Sort {
                 sortByL(0, appointments.size()-1, appointments);
                 break;
             case 'O': //Sort office appointments by county, date, time
+                List<Appointment> office = separateOffice(appointments);
+                sortByL(0, office.size()-1, office);
                 break;
             case 'I': //Sort imaging appointments by county, date, time
+                List<Appointment> imaging = separateImaging(appointments);
+                sortByL(0, imaging.size()-1, imaging);
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -159,8 +176,28 @@ public class Sort {
     }
 
 
+    private static List<Appointment> separateImaging(List<Appointment> appointments){
+        List<Appointment> imaging = new List<>();
+        for(Appointment app : appointments){
+            if(app.getClass() == Imaging.class){
+                imaging.add(app);
+            }
+        }
+        return imaging;
+    }
+
+    private static List<Appointment> separateOffice(List<Appointment> appointments){
+        List<Appointment> office = new List<>();
+        for(Appointment app : appointments){
+            if(app.getClass() != Imaging.class){
+                office.add(app);
+            }
+        }
+        return office;
+    }
+
 
     public static void provider(List<Provider> providers){
-
+        sortByProviders(0, providers.size()-1, providers);
     }
 }
