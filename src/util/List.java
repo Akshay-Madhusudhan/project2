@@ -61,7 +61,7 @@ public class List<E> implements Iterable<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new ListIterator();
+        return new ListIterator<>();
     }
 
     public E get(int index) {
@@ -82,7 +82,7 @@ public class List<E> implements Iterable<E> {
         return this.find(e);
     } //return the index of the object or return -1
 
-    private class ListIterator implements Iterator<E> {
+    private class ListIterator<E> implements Iterator<E> {
         private int curr = 0;
 
         public boolean hasNext() {
@@ -93,7 +93,7 @@ public class List<E> implements Iterable<E> {
             if(!hasNext()){
                 return null;
             }
-            return objects[this.curr++];
+            return (E) objects[this.curr++];
         } //return the next object in the list
     }
 }
