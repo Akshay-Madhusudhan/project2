@@ -15,4 +15,18 @@ public class Doctor extends Provider{
     public int rate() {
         return 0;
     }
+
+    @Override
+    public String toString(){
+        String fName = this.getProfile().getFname().toUpperCase();
+        String lName = this.getProfile().getLname().toUpperCase();
+        String dob = this.getProfile().getDob().toString();
+        String location = this.getLocation().toString().toUpperCase();
+        String county = this.getLocation().countyString().toUpperCase();
+        String zip = this.getLocation().getZip().toUpperCase();
+        String specialty = this.specialty.toString().toUpperCase();
+        String npi = this.npi;
+
+        return "[" + fName + " " + lName + " " + dob + ", " + location + ", " + county + " " + zip + "] [" + specialty + ", #" + npi + "]";
+    }
 }
