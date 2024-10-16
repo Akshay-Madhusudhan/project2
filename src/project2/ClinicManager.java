@@ -85,8 +85,7 @@ public class ClinicManager {
                 dob = new Date(month, day, year);
                 newProfile = new Profile(separated_data[1], separated_data[2], dob);
                 loc = Location.valueOf(separated_data[4]);
-                npi = separated_data[5];
-                int ratePerVisit = 0; //Change idk how we're supposed to know the rates for technicians
+                int ratePerVisit = Integer.parseInt(separated_data[5]);
                 prov = new Technician(newProfile, loc, ratePerVisit);
                 technicians.add(prov);
                 providers.add(prov);

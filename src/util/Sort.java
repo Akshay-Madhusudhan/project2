@@ -116,6 +116,20 @@ public class Sort {
         return i+1;
     }
 
+    private static int partitionProviders(int sIdx, int eIdx, List<Provider> providers){
+        Provider piv = providers.get(eIdx);
+        int i = (sIdx-1);
+
+        for (int j = sIdx; j<eIdx; j++){
+            if(providers.get(j).getProfile().compareTo(piv.getProfile())<0){
+                i++;
+                Provider temp = providers.get(i);
+                providers.set(i, providers.get(j));
+                providers.set(j, temp);
+            }
+        }
+    }
+
     private static void sortByL(int sIdx, int eIdx, List<Appointment> appointments){
         if(sIdx < eIdx){
             int pIdx = partitionByL(sIdx, eIdx, appointments);
@@ -143,5 +157,10 @@ public class Sort {
                 throw new IllegalArgumentException();
         }
     }
-    public static void provider(List<Provider> providers){}
+
+
+
+    public static void provider(List<Provider> providers){
+
+    }
 }
