@@ -154,7 +154,8 @@ public class ClinicManager {
                 printAppointments(Sort.appointment(appointments, 'L'));
                 break;
             case "PC":
-                //Need to implement
+                Sort.provider(providers);
+                printCredits(providers);
                 break;
             case "PO":
                 printAppointments(Sort.appointment(appointments, 'O'));
@@ -539,5 +540,29 @@ public class ClinicManager {
                 " " + tech.getProfile().getDob().toString() + ", " +
                 tech.getLocation().toString() + ", " + tech.getLocation().countyString() + " " + tech.getLocation().getZip() + "][" +
                 "rate: $" + df.format(tech.rate()) + "] booked.");
+    }
+
+    private void printCredits(List<Provider> providers) {
+        System.out.println("** Credit amount ordered by provider. **");
+
+        int[] providerCredits = new int[providers.size()];
+        for(int i = 0; i < providerCredits.length; i++){ providerCredits[i] = 0; }
+
+        for(int i = 0; i < appointments.size(); i++){
+            Provider provider = appointments.get(i).getProvider();
+            int providerIndex = providers.indexOf(provider);
+
+            if(providerIndex != -1){
+                providerCredits[providerIndex] += provider.rate();
+            }
+        }
+
+        for(int i = 0; i < providers.size(); i++){
+            System.out.println("(" + i+1 + ") " + providers.get(i).getProfile().getFname().toUpperCase() + " " +
+                                providers.get(i).getProfile().getLname() + " " + providers.get(i).getProfile().getDob().toString() +
+                                " [credit amount: $" + df.format(providerCredits[i]) + "]");
+        }
+
+        System.out.println("** end of list**");
     }
 }
