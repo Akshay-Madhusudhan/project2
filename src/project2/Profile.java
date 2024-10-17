@@ -56,34 +56,29 @@ public class Profile implements Comparable<Profile>{
         return 0;
     }
 
+    /**
+     * @return String conversion of a Profile object
+     */
     @Override
     public String toString(){
         return this.fname + " " + this.lname + " " + this.dob.toString();
     }
 
-    public static void main(String[] args){
-        Date xmas = new Date(12, 25, 2020);
-        Date val = new Date(2, 14, 2019);
-        Date val2 = new Date(2, 14, 2021);
-        Profile john = new Profile("John", "Doe", xmas);
-        Profile john2 = new Profile("John", "Doe", xmas);
-        Profile abbie = new Profile("Abbie", "Smith", val);
-        Profile abbie2 = new Profile("Abbie", "Ellington", val);
-        Profile abbie3 = new Profile("Abbie", "Smith", val2);
-        System.out.println(john.compareTo(john2));
-        System.out.println(john.compareTo(abbie));
-        System.out.println(john.compareTo(abbie2));
-        System.out.println(abbie.compareTo(abbie3));
-        System.out.println(abbie.compareTo(john));
-        System.out.println(abbie2.compareTo(john));
-        System.out.println(abbie3.compareTo(abbie));
-    }
-
+    /**
+     * @return date of birth
+     */
     public Date getDob() {
         return dob;
     }
 
+    /**
+     * @return first name
+     */
     public String getFname(){ return fname; }
+
+    /**
+     * @return last name
+     */
     public String getLname(){ return lname; }
 
 }

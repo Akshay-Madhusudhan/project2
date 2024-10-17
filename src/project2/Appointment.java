@@ -20,6 +20,11 @@ public class Appointment implements Comparable<Appointment>{
         this.provider = provider;
     }
 
+    /**
+     * @param appointment to be used for String return statements
+     * @param appointments
+     * @return Strings that specify the reason for an invalid appointment date, null if valid
+     */
     // Check if a given appointment is valid
     public String appointmentValid(Appointment appointment, List<Appointment> appointments) {
         if(!date.isValidDate()) return ("Appointment date: " + appointment.getDate().toString() + " is not a valid calendar date.");
@@ -33,6 +38,10 @@ public class Appointment implements Comparable<Appointment>{
         return null;
     }
 
+    /**
+     * @param obj to be compared to this
+     * @return true if Appointment obj is equal to this, false otherwise.
+     */
     @Override
     public boolean equals(Object obj){
         if(obj==null){
@@ -48,6 +57,10 @@ public class Appointment implements Comparable<Appointment>{
         return false;
     }
 
+    /**
+     * @param appointment the object to be compared.
+     * @return -1, 0, 1 using compareTo methods of different classes used in Appointment class
+     */
     @Override
     public int compareTo(Appointment appointment){
         if(this.date.equals(appointment.date)){
@@ -59,18 +72,30 @@ public class Appointment implements Comparable<Appointment>{
         return this.date.compareTo(appointment.date);
     }
 
+    /**
+     * @return provider
+     */
     public Provider getProvider(){
         return this.provider;
     }
 
+    /**
+     * @return patient
+     */
     public Profile getProfile(){
         return this.patient;
     }
 
+    /**
+     * @return timeslot
+     */
     public Timeslot getTimeslot(){
         return this.timeslot;
     }
 
+    /**
+     * @return appointment date
+     */
     public Date getDate(){
         return this.date;
     }

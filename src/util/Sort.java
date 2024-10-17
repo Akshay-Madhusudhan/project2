@@ -2,6 +2,10 @@ package util;
 
 import project2.*;
 
+/**
+ * @author Akshay Madhusudhan
+ * @author Aidan Pembleton
+ */
 public class Sort {
 
     private static int partitionByA(int sIdx, int eIdx, List<Appointment> appointments){
@@ -182,6 +186,11 @@ public class Sort {
         sortByPatients(0, patients.size()-1, patients);
     }
 
+    /**
+     * @param appointments list to be sorted
+     * @param key defines the type of sorting
+     * @return a List of type Appointment that is sorted
+     */
     public static List<Appointment> appointment(List<Appointment> appointments, char key){
         switch(key){
             case 'A': //Sort by date, time, provider
@@ -228,6 +237,10 @@ public class Sort {
     }
 
 
+    /**
+     * @param providers list to be sorted
+     * method that sorts a List of type Provider by profile
+     */
     public static void provider(List<Provider> providers){
         sortByProviders(0, providers.size()-1, providers);
     }

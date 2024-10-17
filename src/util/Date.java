@@ -21,6 +21,9 @@ public class Date implements Comparable<Date> {
         this.year = y;
     }
 
+    /**
+     * @return Strings that indicate if date is a valid appointment date, if valid returns null
+     */
     public String isValidMaster(){
         if(!this.isValidDate()) return ("Appointment date: " + this.toString() + " is not a valid calendar date.");
         if(this.isBeforeToday()) return ("Appointment date: " + this.toString() + " is today or a date before today.");
@@ -29,6 +32,9 @@ public class Date implements Comparable<Date> {
         return null;
     }
 
+    /**
+     * @return true if leap year or false if not
+     */
     public boolean isLeap(){
         if(this.year%QUADRENNIAL==0){
             if(this.year%CENTENNIAL==0){
@@ -39,6 +45,9 @@ public class Date implements Comparable<Date> {
         return false;
     }
 
+    /**
+     * @return true if date is a valid calendar date later than the year 1900, false otherwise
+     */
     public boolean isValidDate(){
         if(this.year < 1900){
             return false;
@@ -75,6 +84,9 @@ public class Date implements Comparable<Date> {
         return false;
     }
 
+    /**
+     * @return true if the date falls on a weekend, false otherwise
+     */
     public boolean isWeekend(){
         Calendar date = Calendar.getInstance();
         date.set(this.year, this.month-1, this.day);
@@ -82,6 +94,9 @@ public class Date implements Comparable<Date> {
         return res == Calendar.SATURDAY || res == Calendar.SUNDAY;
     }
 
+    /**
+     * @return true if date is before today, false otherwise
+     */
     public boolean isBeforeToday(){
         Calendar cal = Calendar.getInstance();
         int Year = cal.get(Calendar.YEAR);
@@ -95,6 +110,9 @@ public class Date implements Comparable<Date> {
         } else return this.year == Year && this.month == Month && this.day < Day;
     }
 
+    /**
+     * @return true if date is within six months from now, false otherwise
+     */
     public boolean withinSix(){
         Calendar today = Calendar.getInstance();
         Calendar sixM = Calendar.getInstance();
@@ -105,16 +123,9 @@ public class Date implements Comparable<Date> {
         return date.after(today) && date.before(sixM);
     }
 
-    //check if the date is a valid calendar date
-    public boolean isValidAppointment(){
-        if(this.isValidDate()) {
-            if(this.withinSix()) {
-                return !this.isWeekend();
-            }
-        }
-        return false;
-    }
-
+    /**
+     * @return true if date is a valid birth date, false otherwise
+     */
     public boolean isValidBirth(){
         if(this.isValidDate()){
             return this.isBeforeToday();
@@ -122,6 +133,10 @@ public class Date implements Comparable<Date> {
         return false;
     }
 
+    /**
+     * @param d the object to be compared.
+     * @return -1, 0, or 1 depending on values of year, month, and day respectively
+     */
     @Override
     public int compareTo(Date d) {
         if(this.year == d.year){
@@ -133,6 +148,10 @@ public class Date implements Comparable<Date> {
         return Integer.compare(this.year, d.year);
     }
 
+    /**
+     * @param obj to be compared with this
+     * @return true if obj is equal to this when cast to Date, false otherwise
+     */
     @Override
     public boolean equals(Object obj){
         if(obj==null){
@@ -145,24 +164,12 @@ public class Date implements Comparable<Date> {
         return d.compareTo(this) == 0;
     }
 
+    /**
+     * @return String conversion of date object
+     */
     @Override
     public String toString(){
         return this.month + "/" + this.day + "/" + this.year;
-    }
-
-    public static void main(String[] args){
-        Date inv1 = new Date(13, 2, 1906);
-        Date inv2 = new Date(2, 29, 2001);
-        Date inv3 = new Date(12, 32, 1762);
-        Date inv4 = new Date(1, 15, -1);
-        Date val1 = new Date(2, 29, 2000);
-        Date val2 = new Date(8, 31, 2026);
-        System.out.println(inv1.isValidDate());
-        System.out.println(inv2.isValidDate());
-        System.out.println(inv3.isValidDate());
-        System.out.println(inv4.isValidDate());
-        System.out.println(val1.isValidDate());
-        System.out.println(val2.isValidDate());
     }
 
 }

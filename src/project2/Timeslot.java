@@ -1,6 +1,10 @@
 package project2;
 import util.*;
 
+/**
+ * @author Akshay Madhusudhan
+ * @author Aidan Pembleton
+ */
 public class Timeslot implements Comparable<Timeslot>{
     private int hour;
     private int minute;
@@ -10,6 +14,9 @@ public class Timeslot implements Comparable<Timeslot>{
         this.minute = minute;
     }
 
+    /**
+     * @return generate a list of timeslots for easy slot comparisons when parsing command
+     */
     // Generates the list of timeslots for use in ClinicManager
     public static List<Timeslot> generateTimeslots(){
         List<Timeslot> timeslots = new List<>();
@@ -29,6 +36,10 @@ public class Timeslot implements Comparable<Timeslot>{
         return timeslots;
     }
 
+    /**
+     * @param obj object to be compared
+     * @return true if this.hour and this.minute match with Timeslot obj hour and minute, false otherwise
+     */
     @Override
     public boolean equals(Object obj){
         if (obj == null || getClass() != obj.getClass()) return false;
@@ -36,8 +47,11 @@ public class Timeslot implements Comparable<Timeslot>{
         return hour == timeslot.hour && minute == timeslot.minute;
     }
 
+    /**
+     * @return String conversion of a timeslot formatted as "X:XX AM/PM"
+     */
     @Override
-    // Convert an Timeslot into a String, formatted e.g. "9:00 AM"
+    // Convert a Timeslot into a String, formatted e.g. "9:00 AM"
     public String toString(){
         int hour12;
         if (hour == 0 || hour == 12) {
@@ -65,6 +79,10 @@ public class Timeslot implements Comparable<Timeslot>{
         return hour12 + ":" + minuteStr + " " + amPm;
     }
 
+    /**
+     * @param slot the object to be compared.
+     * @return -1 if this is less than slot, 0 if this is equal to slot, 1 if this is greater than slot
+     */
     @Override
     public int compareTo(Timeslot slot){
         if (this.hour != slot.hour) {
@@ -74,7 +92,14 @@ public class Timeslot implements Comparable<Timeslot>{
         }
     }
 
+    /**
+     * @return hour value
+     */
     public int getHour() { return hour; }
+
+    /**
+     * @return minute value
+     */
     public int getMinute() { return minute; }
 
 }

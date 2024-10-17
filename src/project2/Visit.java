@@ -14,14 +14,24 @@ public class Visit {
         this.next = null;
     }
 
+    /**
+     * @return next visit in linked list
+     */
     public Visit getNext(){
         return this.next;
     }
 
+    /**
+     * @return appointment in the current node (Visit)
+     */
     public Appointment getApp(){
         return this.appointment;
     }
 
+    /**
+     * @param vis Visit to be set
+     * Method to set the next node (Visit) as vis
+     */
     public void setNext(Visit vis){
         this.next = vis;
     }

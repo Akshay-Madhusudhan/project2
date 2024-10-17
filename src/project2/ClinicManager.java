@@ -6,6 +6,11 @@ import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
+/**
+ * @author Akshay Madhusudhan
+ * @author Aidan Pembleton
+ */
+
 public class ClinicManager {
     private Scanner scanner;
     List<Appointment> appointments = new List<>();
@@ -19,6 +24,9 @@ public class ClinicManager {
         scanner = new Scanner(System.in);
     }
 
+    /**
+     * method to run the clinic manager and parse commands
+     */
     public void run() {
         File fp = new File("providers.txt");
         processProviders(fp); //need to find out how to find out ratePerVisit for technicians
@@ -44,6 +52,9 @@ public class ClinicManager {
         scanner.close();
     }
 
+    /**
+     * prints technicians traversing as though it is a circular linked list
+     */
     private void printTechnicians(){
         Technician last = (Technician) technicians.get(technicians.size()-1);
         Technician tempTech = last;
@@ -58,6 +69,9 @@ public class ClinicManager {
         } while(tempTech!=null && tempTech!=last);
     }
 
+    /**
+     * Reverses technicians in the circular linked list to make iterating easier
+     */
     private void reverseTechnicians(){
         Circular<Provider> temp = new Circular<>();
         Technician last = (Technician) technicians.get(technicians.size()-1);
@@ -71,6 +85,10 @@ public class ClinicManager {
         technicians = temp;
     }
 
+    /**
+     * @param fp provider file taken in
+     * method to process providers.txt file
+     */
     private void processProviders(File fp){
         try{
             Scanner scanner = new Scanner(fp);
@@ -83,6 +101,10 @@ public class ClinicManager {
         }
     }
 
+    /**
+     * @param input a line of the providers.txt file taken one by one
+     * helper method for processProviders() to populate providers and technicians
+     */
     private void providersHelper(String input){
         String[] separated_data = input.split("\\s+");
         String command = separated_data[0];

@@ -1,7 +1,10 @@
 package project2;
 import util.*;
 import java.text.DecimalFormat;
-
+/**
+ * @author Akshay Madhusudhan
+ * @author Aidan Pembleton
+ */
 public class Technician extends Provider{
     private int ratePerVisit;
 
@@ -10,11 +13,18 @@ public class Technician extends Provider{
         this.ratePerVisit = ratePerVisit;
     }
 
+    /**
+     * @return rate per visit of Technicians
+     * method overriding abstract method in parent class
+     */
     @Override
     public int rate() {
         return this.ratePerVisit;
     }
 
+    /**
+     * @return String conversion of technician
+     */
     @Override
     public String toString(){
         DecimalFormat df = new DecimalFormat("#,###.00");

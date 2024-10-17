@@ -2,6 +2,10 @@ package project2;
 
 import util.*;
 
+/**
+ * @author Akshay Madhusudhan
+ * @author Aidan Pembleton
+ */
 public class Imaging extends Appointment{
     private Radiology room;
 
@@ -10,6 +14,9 @@ public class Imaging extends Appointment{
         this.room = room;
     }
 
+    /**
+     * @return radiology room (imaging type)
+     */
     public Radiology getRoom(){
         return this.room;
     }

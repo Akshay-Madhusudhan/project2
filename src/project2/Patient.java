@@ -1,14 +1,25 @@
 package project2;
 import util.*;
 
+/**
+ * @author Akshay Madhusudhan
+ * @author Aidan Pembleton
+ */
 public class Patient extends Person{
     private Visit visit;
 
+    /**
+     * @param profile to be set by constructor
+     */
     public Patient(Profile profile){
         super(profile);
         this.visit = null;
     }
 
+    /**
+     * @param obj to be compared
+     * @return if this.profile object is equal to obj as a profile object
+     */
     @Override
     public boolean equals(Object obj){
         if(obj==null){
@@ -21,6 +32,9 @@ public class Patient extends Person{
         return p.profile.equals(this.profile);
     }
 
+    /**
+     * @param app to be added to linked list
+     */
     public void add(Appointment app){
         Visit newVisit = new Visit(app);
         if(this.visit == null){
@@ -34,6 +48,9 @@ public class Patient extends Person{
         }
     }
 
+    /**
+     * @param app to be removed from linked list
+     */
     public void remove(Appointment app){
         if(this.visit==null){
             return;
@@ -60,6 +77,9 @@ public class Patient extends Person{
         prev.setNext(temp.getNext());
     }
 
+    /**
+     * @return the total charge of a patient's visits
+     */
     public int charge() {
         if(this.visit==null){
             return 0;

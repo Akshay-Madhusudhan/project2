@@ -1,6 +1,9 @@
 package project2;
 import util.*;
-
+/**
+ * @author Akshay Madhusudhan
+ * @author Aidan Pembleton
+ */
 public class Doctor extends Provider{
     private Specialty specialty;
     private String npi;
@@ -11,19 +14,32 @@ public class Doctor extends Provider{
         this.npi = npi;
     }
 
+    /**
+     * @return 0, doctors already have established rates through Specialty class
+     * Method is just to satisfy abstract method requirements
+     */
     @Override
     public int rate() {
         return 0;
     }
 
+    /**
+     * @return npi
+     */
     public String getNpi(){
         return this.npi;
     }
 
+    /**
+     * @return specialty
+     */
     public Specialty getSpecialty(){
         return this.specialty;
     }
 
+    /**
+     * @return String conversion of Doctor object
+     */
     @Override
     public String toString(){
         String fName = this.getProfile().getFname().toUpperCase();
