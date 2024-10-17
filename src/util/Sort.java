@@ -182,25 +182,25 @@ public class Sort {
         sortByPatients(0, patients.size()-1, patients);
     }
 
-    public static void appointment(List<Appointment> appointments, char key){
+    public static List<Appointment> appointment(List<Appointment> appointments, char key){
         switch(key){
             case 'A': //Sort by date, time, provider
                 sortByA(0, appointments.size()-1, appointments);
-                break;
+                return appointments;
             case 'P': //Sort by patient
                 sortByP(0, appointments.size()-1, appointments);
-                break;
+                return appointments;
             case 'L': //Sort by county, date, time
                 sortByL(0, appointments.size()-1, appointments);
-                break;
+                return appointments;
             case 'O': //Sort office appointments by county, date, time
                 List<Appointment> office = separateOffice(appointments);
                 sortByL(0, office.size()-1, office);
-                break;
+                return office;
             case 'I': //Sort imaging appointments by county, date, time
                 List<Appointment> imaging = separateImaging(appointments);
                 sortByL(0, imaging.size()-1, imaging);
-                break;
+                return imaging;
             default:
                 throw new IllegalArgumentException();
         }

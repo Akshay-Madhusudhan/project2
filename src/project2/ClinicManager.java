@@ -133,6 +133,7 @@ public class ClinicManager {
                 break;
             case "T":
                 //Schedule new imaging appointment (Technician)
+                scheduleImagingAppointment(separated_data);
                 break;
             case "C":
                 //Cancel any type of appointment (Should work the same as Project 1)
@@ -144,25 +145,23 @@ public class ClinicManager {
                 break;
             case "PA":
                 //Implement printAppointments
-                Sort.appointment(appointments, 'A');
-                printAppointments(appointments);
+                printAppointments(Sort.appointment(appointments, 'A'));
                 break;
             case "PP":
-                Sort.appointment(appointments, 'P');
-                printAppointments(appointments);
+                printAppointments(Sort.appointment(appointments, 'P'));
                 break;
             case "PL":
-                Sort.appointment(appointments, 'L');
-                printAppointments(appointments);
+                printAppointments(Sort.appointment(appointments, 'L'));
                 break;
             case "PC":
                 //Need to implement
                 break;
             case "PO":
                 //Need to implement
+                printAppointments(Sort.appointment(appointments, 'O'));
                 break;
             case "PI":
-                //Need to implement
+                printAppointments(Sort.appointment(appointments, 'i'));
                 break;
             case "PS":
                 printStatements();
@@ -467,7 +466,7 @@ public class ClinicManager {
             separated_data[4] = separated_data[4];
             separated_data[5] = separated_data[5];
         } catch(IndexOutOfBoundsException e){
-            System.out.println("Please enter a correctly-formatted command.");
+            System.out.println("Missing data tokens.");
             return;
         }
 
@@ -498,9 +497,9 @@ public class ClinicManager {
         Profile patient = new Profile(fname, lname, dobDate);
 
         String imagingType = separated_data[5];
-        if(!(imagingType.toUpperCase() == Radiology.CATSCAN.toString() ||
-                imagingType.toUpperCase() == Radiology.ULTRASOUND.toString() ||
-                imagingType.toUpperCase() == Radiology.XRAY.toString())){
+        if(!(imagingType.toUpperCase().equals(Radiology.CATSCAN.toString()) ||
+                imagingType.toUpperCase().equals(Radiology.ULTRASOUND.toString()) ||
+                imagingType.toUpperCase().equals(Radiology.XRAY.toString()))){
             System.out.println(imagingType.toUpperCase() + " is not a valid imaging type.");
             return;
         }
