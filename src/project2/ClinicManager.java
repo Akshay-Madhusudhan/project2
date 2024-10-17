@@ -457,4 +457,84 @@ public class ClinicManager {
         }
     }
 
+    private void scheduleImagingAppointment(String[] separated_data){
+        // This try/catch is to catch errors where user doesn't include entire command
+        try{
+            separated_data[0] = separated_data[0];
+            separated_data[1] = separated_data[1];
+            separated_data[2] = separated_data[2];
+            separated_data[3] = separated_data[3];
+            separated_data[4] = separated_data[4];
+            separated_data[5] = separated_data[5];
+        } catch(IndexOutOfBoundsException e){
+            System.out.println("Please enter a correctly-formatted command.");
+            return;
+        }
+
+        String[] dateStrings = separated_data[0].split("/");
+        int month = Integer.parseInt(dateStrings[0]);
+        int day = Integer.parseInt(dateStrings[1]);
+        int year = Integer.parseInt(dateStrings[2]);
+        Date appointmentDate = new Date(month, day, year);
+
+        String timeslotString = separated_data[1];
+        if(!Character.isDigit(timeslotString.charAt(0))){
+            System.out.println(timeslotString + " is not a valid timeslot.");
+            return;
+        }
+        if(Integer.parseInt(timeslotString) < 1 || Integer.parseInt(timeslotString) > timeslots.size()){
+            System.out.println(timeslotString + " is not a valid timeslot.");
+            return;
+        }
+        Timeslot timeslot = timeslots.get(Integer.parseInt(timeslotString) - 1);
+
+        String fname = separated_data[2];
+        String lname = separated_data[3];
+        String[] dobStrings = separated_data[4].split("/");
+        int dobMonth = Integer.parseInt(dobStrings[0]);
+        int dobDay = Integer.parseInt(dobStrings[1]);
+        int dobYear = Integer.parseInt(dobStrings[2]);
+        Date dobDate = new Date(dobMonth, dobDay, dobYear);
+        Profile patient = new Profile(fname, lname, dobDate);
+
+        String imagingType = separated_data[5];
+        if(!(imagingType.toUpperCase() == Radiology.CATSCAN.toString() ||
+                imagingType.toUpperCase() == Radiology.ULTRASOUND.toString() ||
+                imagingType.toUpperCase() == Radiology.XRAY.toString())){
+            System.out.println(imagingType.toUpperCase() + " is not a valid imaging type.");
+            return;
+        }
+
+        Provider provider = null;
+        for(Provider prov : providers){
+            if(prov.getClass()==Technician.class){
+                provider = prov;
+            }
+        }
+
+        Appointment appointment = new Appointment(appointmentDate, timeslot, patient, provider);
+
+        if(appointment.appointmentValid(appointment, appointments) != null){
+            System.out.println(appointment.appointmentValid(appointment, appointments));
+            return;
+        }
+
+        Technician tech = (Technician) provider;
+
+        if(providerBooked(timeslot, appointment)){
+            System.out.println("[" + tech.getProfile().getFname().toUpperCase() + " " + tech.getProfile().getLname().toUpperCase() +
+                    " " + tech.getProfile().getDob().toString() + ", " +
+                    tech.getLocation().toString() + ", " + tech.getLocation().countyString() + " " + tech.getLocation().getZip() + "][" +
+                    "rate: $" + df.format(tech.rate()) + "] is not available at slot " + timeslotString + ".");
+            return;
+        }
+
+        appointments.add(appointment);
+        addToMedicalRecord(patient, appointment);
+        System.out.println(appointment.getDate().toString() + " " + timeslot.toString() + " " + patient.getFname() + " " + patient.getLname() + patient.getDob().toString() + " " +
+                "[" + tech.getProfile().getFname().toUpperCase() + " " + tech.getProfile().getLname().toUpperCase() +
+                " " + tech.getProfile().getDob().toString() + ", " +
+                tech.getLocation().toString() + ", " + tech.getLocation().countyString() + " " + tech.getLocation().getZip() + "][" +
+                "rate: $" + df.format(tech.rate()) + "] booked.");
+    }
 }
