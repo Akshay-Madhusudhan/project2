@@ -44,9 +44,17 @@ public class ClinicManager {
     }
 
     private void printTechnicians(){
-        for(Provider tech : technicians){
-            System.out.print(tech.getProfile().getFname().toUpperCase() + " " + tech.getProfile().getLname().toUpperCase() + " (" + tech.getLocation().toString() + ") -->");
-        }
+        Technician last = (Technician) technicians.get(technicians.size()-1);
+        Technician tempTech = last;
+        int idx = technicians.size()-1;
+        do{
+            System.out.print(tempTech.getProfile().getFname().toUpperCase() + " " + tempTech.getProfile().getLname().toUpperCase() + " (" + tempTech.getLocation().toString() + ")");
+            if(idx!=0){
+                System.out.print(" --> ");
+            }
+            idx--;
+            tempTech = (Technician)technicians.get(idx);
+        } while(tempTech!=null && tempTech!=last);
     }
 
     private void processProviders(File fp){
@@ -128,11 +136,11 @@ public class ClinicManager {
                 break;
             case "C":
                 //Cancel any type of appointment (Should work the same as Project 1)
-                cancelAppointment(separated_data);
+                //cancelAppointment(separated_data);
                 break;
             case "R":
                 //Should work same as project 1
-                rescheduleAppointment(separated_data);
+                //rescheduleAppointment(separated_data);
                 break;
             case "PA":
                 //Implement printAppointments
@@ -281,7 +289,7 @@ public class ClinicManager {
                 fname + " " + lname + " " + dobDate.toString() + " does not exist.");
     }
 
-    // Takes array of Strings containing data after command, reschedules an appointment to a different timeslot (same day, same provider)
+    //Takes array of Strings containing data after command, reschedules an appointment to a different timeslot (same day, same provider)
     private void rescheduleAppointment(String[] separated_data) {
         String[] dateStrings = separated_data[0].split("/");
         int month = Integer.parseInt(dateStrings[0]);
@@ -358,8 +366,8 @@ public class ClinicManager {
 
     // Takes a given timeslot and appointment, determines if provider of that appointment is busy at that timeslot on that day
     private boolean providerBooked(Timeslot timeslot, Appointment appointment) {
-        for(int i = 0; i < appointments.getSize(); i++){
-            Appointment pointer = appointments.getAppointments()[i];
+        for(int i = 0; i < appointments.size(); i++){
+            Appointment pointer = appointments.get(i);
             if(pointer.getDate().equals(appointment.getDate()) &&
                     pointer.getTimeslot().equals(appointment.getTimeslot()) &&
                     pointer.getProvider().equals(appointment.getProvider())){
