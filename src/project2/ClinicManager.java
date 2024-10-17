@@ -141,7 +141,7 @@ public class ClinicManager {
                 break;
             case "R":
                 //Should work same as project 1
-                //rescheduleAppointment(separated_data);
+                rescheduleAppointment(separated_data);
                 break;
             case "PA":
                 //Implement printAppointments
@@ -157,7 +157,6 @@ public class ClinicManager {
                 //Need to implement
                 break;
             case "PO":
-                //Need to implement
                 printAppointments(Sort.appointment(appointments, 'O'));
                 break;
             case "PI":
@@ -294,10 +293,10 @@ public class ClinicManager {
                 appointments.remove(appointment);
                 removePatientVisit(patient, appointment);
                 System.out.println(appointment.getDate().toString() + " " + appointment.getTimeslot().toString() + " " +
-                        fname + " " + lname + " " + dobDate.toString() + " has been canceled.");
+                        fname + " " + lname + " " + dobDate.toString() + " - appointment has been canceled.");
             } else
                 System.out.println(appointment.getDate().toString() + " " + appointment.getTimeslot().toString() + " " +
-                        fname + " " + lname + " " + dobDate.toString() + " does not exist.");
+                        fname + " " + lname + " " + dobDate.toString() + " - appointment does not exist.");
         } catch (Exception e){
             System.out.println("Missing data tokens.");
         }
@@ -343,35 +342,40 @@ public class ClinicManager {
                     fname + " " + lname + " " + dobDate.toString() + " does not exist.");
             return;
         }
-        Appointment oldAppointment = appointments.getAppointments()[appointments.findIdx(appointment)];
+
+        Appointment oldAppointment = appointments.get(appointments.indexOf(appointment));
+        if(oldAppointment==null){
+            System.out.println(appointmentDate + " " + timeslot.toString() + " " + fname + " " + lname + " " + dobDate.toString() + " does not exist.");
+            return;
+        }
 
         String newTimeslotString = separated_data[5];
-        if(!Timeslot.contains("SLOT" + Integer.parseInt(newTimeslotString))){
+
+        Timeslot newTimeslot = timeslots.get(Integer.parseInt(newTimeslotString)-1);
+
+        if(newTimeslot==null){
             System.out.println(newTimeslotString + " is not a valid time slot.");
             return;
         }
-        Timeslot newTimeslot = Timeslot.valueOf("SLOT" + Integer.parseInt(newTimeslotString));
 
         Appointment newAppointment = new Appointment(appointmentDate, newTimeslot, patient, oldAppointment.getProvider());
 
-        Provider provider = oldAppointment.getProvider();
-        String providerString = provider.toString();
-        if(providerBooked(newTimeslot, newAppointment)){
-            System.out.println("[" + providerString.toUpperCase() + ", " +
-                    provider.getLocation().toString().toUpperCase() + ", " + provider.getLocation().countyString() + " " +
-                    provider.getLocation().getZip() + ", " + provider.getSpecialty().toString().toUpperCase() + "] is not available at slot " +
-                    timeslotString + ".");
-            return;
+        for(Appointment app : appointments){
+            if(newAppointment.getProvider().equals(app.getProvider()) && newAppointment.getTimeslot().equals(app.getTimeslot()) && newAppointment.getDate().equals(app.getDate())){
+                System.out.println(app.getProfile().getFname() + " " + app.getProfile().getLname() + " " + app.getProfile().getDob().toString() +
+                        " has an existing appointment at " + app.getDate().toString() + " " + app.getTimeslot().toString());
+                return;
+            }
         }
+
+        Provider provider = oldAppointment.getProvider();
 
         if(appointments.contains(oldAppointment)){
             appointments.remove(oldAppointment);
             appointments.add(newAppointment);
             System.out.println("Rescheduled to " + newAppointment.getDate().toString() + " " + newAppointment.getTimeslot().toString() + " " +
-                    fname + " " + lname + " " + dobDate.toString() + " [" + providerString.toUpperCase() + ", " +
-                    provider.getLocation().toString().toUpperCase() + ", " + provider.getLocation().countyString() + " " +
-                    provider.getLocation().getZip() + ", " + provider.getSpecialty().toString().toUpperCase() + "]");
-        } else System.out.println(newAppointment.getDate().toString() + " " + newAppointment.getTimeslot().toString() + " " +
+                    fname + " " + lname + " " + dobDate.toString() + " " + newAppointment.getProvider().toString());
+        } else System.out.println(oldAppointment.getDate().toString() + " " + oldAppointment.getTimeslot().toString() + " " +
                 fname + " " + lname + " " + dobDate.toString() + " does not exist.");
     }
 
