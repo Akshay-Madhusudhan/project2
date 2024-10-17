@@ -21,6 +21,14 @@ public class Date implements Comparable<Date> {
         this.year = y;
     }
 
+    public String isValidMaster(){
+        if(!this.isValidDate()) return ("Appointment date: " + this.toString() + " is not a valid calendar date.");
+        if(this.isBeforeToday()) return ("Appointment date: " + this.toString() + " is today or a date before today.");
+        if(this.isWeekend()) return ("Appointment date: " + this.toString() + " is Saturday or Sunday.");
+        if(!this.withinSix()) return ("Appointment date: " + this.toString() + " is not within six months.");
+        return null;
+    }
+
     public boolean isLeap(){
         if(this.year%QUADRENNIAL==0){
             if(this.year%CENTENNIAL==0){

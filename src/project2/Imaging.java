@@ -10,5 +10,8 @@ public class Imaging extends Appointment{
         this.room = room;
     }
 
+    public Radiology getRoom(){
+        return this.room;
+    }
 
 }

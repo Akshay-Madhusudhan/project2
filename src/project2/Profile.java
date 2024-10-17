@@ -30,10 +30,14 @@ public class Profile implements Comparable<Profile>{
         return pro.compareTo(this) == 0;
     }
 
+    /**
+     * @param o the object to be compared.
+     * @return -1, 0, or 1 depending on equality
+     */
     @Override
     public int compareTo(Profile o) {
-        if(this.lname.equals(o.lname)){
-            if(this.fname.equals(o.fname)){
+        if(this.lname.equalsIgnoreCase(o.lname)){
+            if(this.fname.equalsIgnoreCase(o.fname)){
                 return this.dob.compareTo(o.dob);
             }
             if(this.fname.compareTo(o.fname) < 0){
