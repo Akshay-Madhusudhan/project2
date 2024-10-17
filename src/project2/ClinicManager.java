@@ -136,7 +136,7 @@ public class ClinicManager {
                 break;
             case "C":
                 //Cancel any type of appointment (Should work the same as Project 1)
-                //cancelAppointment(separated_data);
+                cancelAppointment(separated_data);
                 break;
             case "R":
                 //Should work same as project 1
@@ -259,38 +259,54 @@ public class ClinicManager {
 
     // Takes array of Strings containing data after command, removes an appointment on list if it exists
     private void cancelAppointment(String[] separated_data) {
-        String[] dateStrings = separated_data[0].split("/");
-        int month = Integer.parseInt(dateStrings[0]);
-        int day = Integer.parseInt(dateStrings[1]);
-        int year = Integer.parseInt(dateStrings[2]);
-        Date appointmentDate = new Date(month, day, year);
+        try {
+            String[] dateStrings = separated_data[0].split("/");
+            int month = Integer.parseInt(dateStrings[0]);
+            int day = Integer.parseInt(dateStrings[1]);
+            int year = Integer.parseInt(dateStrings[2]);
+            Date appointmentDate = new Date(month, day, year);
 
-        String timeslotString = separated_data[1];
-        Timeslot timeslot = Timeslot.valueOf("SLOT" + Integer.parseInt(timeslotString));
+            String timeslotString = separated_data[1];
+            Timeslot timeslot = timeslots.get(Integer.parseInt(timeslotString) - 1);
 
-        String fname = separated_data[2];
-        String lname = separated_data[3];
-        String[] dobStrings = separated_data[4].split("/");
-        int dobMonth = Integer.parseInt(dobStrings[0]);
-        int dobDay = Integer.parseInt(dobStrings[1]);
-        int dobYear = Integer.parseInt(dobStrings[2]);
-        Date dobDate = new Date(dobMonth, dobDay, dobYear);
-        Profile patient = new Profile(fname, lname, dobDate);
+            if(timeslot==null){
+                System.out.println(timeslotString + " is not a valid timeslot.");
+                return;
+            }
 
-        Appointment appointment = new Appointment(appointmentDate, timeslot, patient, Provider.PATEL);
+            String fname = separated_data[2];
+            String lname = separated_data[3];
+            String[] dobStrings = separated_data[4].split("/");
+            int dobMonth = Integer.parseInt(dobStrings[0]);
+            int dobDay = Integer.parseInt(dobStrings[1]);
+            int dobYear = Integer.parseInt(dobStrings[2]);
+            Date dobDate = new Date(dobMonth, dobDay, dobYear);
+            Profile patient = new Profile(fname, lname, dobDate);
 
-        if(appointments.contains(appointment)){
-            appointments.remove(appointment);
-            removePatientVisit(patient, appointment);
-            System.out.println(appointment.getDate().toString() + " " + appointment.getTimeslot().toString() + " " +
-                    fname + " " + lname + " " + dobDate.toString() + " has been canceled.");
+            Appointment appointment = null;
+
+            for(Appointment app : appointments){
+                if(app.getDate().equals(appointmentDate) && app.getTimeslot().equals(timeslot) && app.getProfile().equals(patient)){
+                    appointment = app;
+                }
+            }
+
+            if (appointments.contains(appointment)) {
+                appointments.remove(appointment);
+                removePatientVisit(patient, appointment);
+                System.out.println(appointment.getDate().toString() + " " + appointment.getTimeslot().toString() + " " +
+                        fname + " " + lname + " " + dobDate.toString() + " has been canceled.");
+            } else
+                System.out.println(appointment.getDate().toString() + " " + appointment.getTimeslot().toString() + " " +
+                        fname + " " + lname + " " + dobDate.toString() + " does not exist.");
+        } catch (Exception e){
+            System.out.println("Missing data tokens.");
         }
-        else System.out.println(appointment.getDate().toString() + " " + appointment.getTimeslot().toString() + " " +
-                fname + " " + lname + " " + dobDate.toString() + " does not exist.");
     }
 
     //Takes array of Strings containing data after command, reschedules an appointment to a different timeslot (same day, same provider)
     private void rescheduleAppointment(String[] separated_data) {
+
         String[] dateStrings = separated_data[0].split("/");
         int month = Integer.parseInt(dateStrings[0]);
         int day = Integer.parseInt(dateStrings[1]);
@@ -299,13 +315,12 @@ public class ClinicManager {
 
         String timeslotString = separated_data[1];
 
-        if(!Timeslot.contains("SLOT" + Integer.parseInt(timeslotString))){
-            System.out.println(timeslotString + " is not a valid time slot.");
+        Timeslot timeslot = timeslots.get(Integer.parseInt(timeslotString) - 1);
+
+        if(timeslot==null){
+            System.out.println(timeslotString + " is not a valid timeslot.");
             return;
         }
-
-        Timeslot timeslot = Timeslot.valueOf("SLOT" + Integer.parseInt(timeslotString));
-
 
         String fname = separated_data[2];
         String lname = separated_data[3];
@@ -316,7 +331,14 @@ public class ClinicManager {
         Date dobDate = new Date(dobMonth, dobDay, dobYear);
         Profile patient = new Profile(fname, lname, dobDate);
 
-        Appointment appointment = new Appointment(appointmentDate, timeslot, patient, Provider.PATEL);
+        Appointment appointment = null;
+
+        for(Appointment app : appointments){
+            if(app.getDate().equals(appointmentDate) && app.getTimeslot().equals(timeslot) && app.getProfile().equals(patient)){
+                appointment = app;
+            }
+        }
+
         if(!appointments.contains(appointment)) {
             System.out.println(appointment.getDate().toString() + " " + appointment.getTimeslot().toString() + " " +
                     fname + " " + lname + " " + dobDate.toString() + " does not exist.");
