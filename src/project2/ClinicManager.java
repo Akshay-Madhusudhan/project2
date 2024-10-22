@@ -461,7 +461,12 @@ public class ClinicManager {
                 return;
             }
 
-            Appointment newAppointment = new Appointment(appointmentDate, newTimeslot, patient, oldAppointment.getProvider());
+            Appointment newAppointment = null;
+            if(oldAppointment.getClass()==Imaging.class){
+                newAppointment = new Imaging(appointmentDate, newTimeslot, patient, oldAppointment.getProvider(), ((Imaging) oldAppointment).getRoom());
+            } else {
+                newAppointment = new Appointment(appointmentDate, newTimeslot, patient, oldAppointment.getProvider());
+            }
 
             for (Appointment app : appointments) {
                 if (newAppointment.getProvider().equals(app.getProvider()) && newAppointment.getTimeslot().equals(app.getTimeslot()) && newAppointment.getDate().equals(app.getDate())) {
