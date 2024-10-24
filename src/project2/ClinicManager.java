@@ -33,8 +33,8 @@ public class ClinicManager {
         System.out.println("Providers loaded to the list.");
         printProviders();
         System.out.println("\nRotation list for the technicians.");
-        printTechnicians();
         reverseTechnicians();
+        printTechnicians();
         System.out.println("\nClinic Manager is running...");
         while (true) {
             String input = scanner.nextLine().trim();
@@ -56,17 +56,15 @@ public class ClinicManager {
      * prints technicians traversing as though it is a circular linked list
      */
     private void printTechnicians(){
-        Technician last = (Technician) technicians.get(technicians.size()-1);
-        Technician tempTech = last;
-        int idx = technicians.size()-1;
-        do{
-            System.out.print(tempTech.getProfile().getFname().toUpperCase() + " " + tempTech.getProfile().getLname().toUpperCase() + " (" + tempTech.getLocation().toString() + ")");
-            if(idx!=0){
-                System.out.print(" --> ");
+        int idx = 0;
+        for(Provider tech: technicians){
+            if(idx%technicians.size()==technicians.size()-1){
+                System.out.print(tech.getProfile().getFname().toUpperCase() + " " + tech.getProfile().getLname().toUpperCase() + " (" + tech.getLocation().toString() + ")");
+                break;
             }
-            idx--;
-            tempTech = (Technician)technicians.get(idx);
-        } while(tempTech!=null && tempTech!=last);
+            idx++;
+            System.out.print(tech.getProfile().getFname().toUpperCase() + " " + tech.getProfile().getLname().toUpperCase() + " (" + tech.getLocation().toString() + ") --> ");
+        }
     }
 
     /**
@@ -643,7 +641,7 @@ public class ClinicManager {
         } else do{
             boolean isBooked = false;
             for(Appointment app : appointments){
-                if(app.getProvider().equals(tempTech) && app.getTimeslot().equals(timeslot) && app.getDate().equals(appointmentDate)){
+                if(app.getClass()==Imaging.class && app.getProvider().equals(tempTech) && app.getTimeslot().equals(timeslot) && app.getDate().equals(appointmentDate)){
                     isBooked = true;
                     break;
                 }

@@ -70,7 +70,7 @@ public class Circular<E> extends List<E>{
          */
         @Override
         public boolean hasNext(){
-            return !isEmpty() || this.curr < size();
+            return !isEmpty() || this.curr < size() || (this.curr%size()!=size()-1);
         }
 
         /**
@@ -81,7 +81,8 @@ public class Circular<E> extends List<E>{
             if(!hasNext()){
                 return null;
             }
-            E result = get((curr + 1) % size());
+            E result = get(this.curr);
+            this.curr = (this.curr+1)%size();
             return result;
         }
     }
