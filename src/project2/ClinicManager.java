@@ -184,7 +184,7 @@ public class ClinicManager {
                     System.out.println("Schedule calendar is empty.");
                     break;
                 }
-                System.out.println("** List of appointments, ordered by date/time/provider.");
+                System.out.println("\n** List of appointments, ordered by date/time/provider.");
                 printAppointments(Sort.appointment(appointments, 'A'));
                 System.out.println("** end of list **");
                 break;
@@ -193,7 +193,7 @@ public class ClinicManager {
                     System.out.println("Schedule calendar is empty.");
                     break;
                 }
-                System.out.println("** List of appointments, ordered by provider/date/time.");
+                System.out.println("\n** List of appointments, ordered by provider/date/time.");
                 printAppointments(Sort.appointment(appointments, 'P'));
                 System.out.println("** end of list **");
                 break;
@@ -202,7 +202,7 @@ public class ClinicManager {
                     System.out.println("Schedule calendar is empty.");
                     break;
                 }
-                System.out.println("** List of appointments, ordered by county/date/time.");
+                System.out.println("\n** List of appointments, ordered by county/date/time.");
                 printAppointments(Sort.appointment(appointments, 'L'));
                 System.out.println("** end of list **");
                 break;
@@ -215,7 +215,7 @@ public class ClinicManager {
                     System.out.println("Schedule calendar is empty.");
                     break;
                 }
-                System.out.println("** List of office appointments ordered by county/date/time.");
+                System.out.println("\n** List of office appointments ordered by county/date/time.");
                 printAppointments(Sort.appointment(appointments, 'O'));
                 System.out.println("** end of list **");
                 break;
@@ -224,7 +224,7 @@ public class ClinicManager {
                     System.out.println("Schedule calendar is empty.");
                     break;
                 }
-                System.out.println("** List of radiology appointments ordered by county/date/time.");
+                System.out.println("\n** List of radiology appointments ordered by county/date/time.");
                 printAppointments(Sort.appointment(appointments, 'I'));
                 System.out.println("** end of list **");
                 break;
@@ -523,7 +523,7 @@ public class ClinicManager {
 
         Sort.patient(record);
 
-        System.out.println("** Billing statement ordered by patient **");
+        System.out.println("\n** Billing statement ordered by patient **");
         int count = 0;
         for(Patient p : record){
             int charge = p.charge();
@@ -532,7 +532,7 @@ public class ClinicManager {
             String dobString = p.getProfile().getDob().toString();
             System.out.println("(" + (count++) + ") " + fname + " " + lname + " " + dobString + " [amount due: $" + df.format(charge) + "]");
         }
-        System.out.println("** end of list **\n");
+        System.out.println("** end of list **");
     }
 
     // Helper method to make adding to the record easier
@@ -694,7 +694,7 @@ public class ClinicManager {
             System.out.println("Schedule calendar is empty.");
             return;
         }
-        System.out.println("** Credit amount ordered by provider. **");
+        System.out.println("\n** Credit amount ordered by provider. **");
 
         int[] providerCredits = new int[providers.size()];
         for(int i = 0; i < providerCredits.length; i++){
