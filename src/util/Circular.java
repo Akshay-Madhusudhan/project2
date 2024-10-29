@@ -7,11 +7,13 @@ import java.util.Iterator;
  */
 public class Circular<E> extends List<E>{
 
+    private int startIdx;
     /**
      * Constructor inherits all instance vars of List
      */
     public Circular(){
         super();
+        this.startIdx = 0;
     }
 
     /**
@@ -47,6 +49,13 @@ public class Circular<E> extends List<E>{
         return super.get(cIdx);
     }
 
+    public void setStartIdx(E e){
+        int idx = indexOf(e);
+        if(idx!=-1){
+            this.startIdx = idx;
+        }
+    }
+
     /**
      * @return Iterator for easy iteration over Circular class
      */
@@ -63,14 +72,22 @@ public class Circular<E> extends List<E>{
     }
 
     private class CircularListIterator implements Iterator<E>{
-        private int curr = 0;
+        private int curr;
+        private final int start;
+        private boolean cycled;
+
+        public CircularListIterator(){
+            this.curr = startIdx%size();
+            this.start = curr;
+            this.cycled = false;
+        }
 
         /**
-         * @return true if there is an object in the next index (always returns true in this case unless empty)
+         * @return true if there is an object in the next index
          */
         @Override
         public boolean hasNext(){
-            return !isEmpty() || this.curr < size() || (this.curr%size()!=size()-1);
+            return size()>0 && (!this.cycled || this.curr!=this.start);
         }
 
         /**
@@ -83,6 +100,9 @@ public class Circular<E> extends List<E>{
             }
             E result = get(this.curr);
             this.curr = (this.curr+1)%size();
+            if(this.curr==this.start){
+                this.cycled = true;
+            }
             return result;
         }
     }

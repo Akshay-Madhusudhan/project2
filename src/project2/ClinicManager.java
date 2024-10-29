@@ -632,34 +632,34 @@ public class ClinicManager {
             return;
         }
 
+        Radiology room = Radiology.valueOf(imagingType.toUpperCase());
+
         Provider provider = null;
-        Technician first = (Technician) technicians.get(0);
-        Technician tempTech = first;
-        int idx = 0;
         if(appointments.isEmpty()){
-            provider = tempTech;
-        } else do{
-            boolean isBooked = false;
-            for(Appointment app : appointments){
-                if(app.getClass()==Imaging.class && app.getProvider().equals(tempTech) && app.getTimeslot().equals(timeslot) && app.getDate().equals(appointmentDate)){
-                    isBooked = true;
+            provider = technicians.get(0);
+        } else {
+            for(Provider tech : technicians) {
+                boolean isBooked = false;
+                for (Appointment app : appointments) {
+                    if ((app.getClass() == Imaging.class && app.getProvider().equals(tech) && app.getTimeslot().equals(timeslot) && app.getDate().equals(appointmentDate))) {
+                        isBooked = true;
+                        break;
+                    } else if (app.getClass() == Imaging.class && ((Imaging) app).getRoom().equals(room) && app.getProvider().getLocation().equals(tech.getLocation()) && app.getTimeslot().equals(timeslot) && app.getDate().equals(appointmentDate)) {
+                        isBooked = true;
+                        break;
+                    }
+                }
+                if (!isBooked) {
+                    provider = tech;
                     break;
                 }
             }
-            if(!isBooked){
-                provider = tempTech;
-                break;
-            }
-            idx = (idx+1) % technicians.size();
-            tempTech = (Technician)technicians.get(idx);
-        } while(tempTech!=null && tempTech!=first || idx != 0);
+        }
 
         if(provider==null){
             System.out.println("Cannot find an available technician at all locations for " + imagingType.toUpperCase() + " at slot" + timeslotString + ".");
             return;
         }
-
-        Radiology room = Radiology.valueOf(imagingType.toUpperCase());
 
         Imaging appointment = new Imaging(appointmentDate, timeslot, patient, provider, room);
 
@@ -685,6 +685,8 @@ public class ClinicManager {
                 " " + tech.getProfile().getDob().toString() + ", " +
                 tech.getLocation().toString() + ", " + tech.getLocation().countyString() + " " + tech.getLocation().getZip() + "][" +
                 "rate: $" + df.format(tech.rate()) + "][" + appointment.getRoom() + "] booked.");
+        Provider toStart = technicians.get((technicians.indexOf(provider)+1)%technicians.size());
+        technicians.setStartIdx(toStart);
     }
 
     private void printCredits(List<Provider> providers) {
