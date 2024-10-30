@@ -107,7 +107,7 @@ public class List<E> implements Iterable<E> {
      * @param e object that will be set in that index
      */
     public void set(int index, E e) {
-        if(index <0 || index >= this.objects.length){
+        if(index <0 || index >= this.size){
             return;
         }
         this.objects[index] = e;

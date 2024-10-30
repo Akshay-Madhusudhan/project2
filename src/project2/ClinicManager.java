@@ -311,6 +311,7 @@ public class ClinicManager {
             for (Provider prov : providers) {
                 if (prov.getClass() == Doctor.class && ((Doctor) prov).getNpi().equals(npi)) {
                     provider = prov;
+                    break;
                 }
             }
 
